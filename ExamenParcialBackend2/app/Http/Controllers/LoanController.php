@@ -13,7 +13,7 @@ class LoanController extends Controller{
     {
         $book = Book::findOrFail($request->book_id);
 
-        if ($book->copias_disponibles <= 0) {
+        if ($book->available_copies <= 0) {
             return response()->json(['message' => 'No hay copias disponibles para este libro.'], 422);
         }
 
@@ -22,9 +22,9 @@ class LoanController extends Controller{
             'applicant_name' => $request->applicant_name,
             'loan_date' => Carbon::now(), 
         ]);
-        $book->decrement('copias_disponibles');      
-        if ($book->copias_disponibles == 0) {
-            $book->update(['estado' => false]);
+        $book->decrement('available_copies');      
+        if ($book->available_copies == 0) {
+            $book->update(['status' => false]);
         }
         return response()->json($loan, 201);
     }
